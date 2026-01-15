@@ -1,7 +1,7 @@
 # Social-Media-and-Mental-Health-Balance-Power-BI-
 
 ## Social Media, Screen Time & Mental Health Analysis
-Power BI Project — Using Kaggle Dataset  
+Power BI Project - Using Kaggle Dataset  
 Dataset: Mental_Health_and_Social_Media_Balance_Dataset (Imran, 2023)
 
 ## Project Overview
