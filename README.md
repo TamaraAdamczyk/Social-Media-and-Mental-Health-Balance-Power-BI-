@@ -11,7 +11,7 @@ The analysis was built entirely in Power BI, combining:
 - Data cleaning in Power Query
 - DAX measures for statistical modelling
 - Visual analytics (scatter plots, bar charts, matrices)
-- Linear regression and R² calculation
+- Linear regression
 - Error bars and conditional formatting
 
 The goal was to understand behavioural patterns and quantify relationships between screen time and mental health indicators.
@@ -175,7 +175,8 @@ MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Users] = COUNTROWS('Menta
 - Platform usage comparisons
 
 ## Screenshots of Dashboard
-<img width="1140" height="643" alt="image" src="https://github.com/user-attachments/assets/b92fcd09-2e41-40b1-a23f-db256496dcc5" />
+<img width="1146" height="641" alt="image" src="https://github.com/user-attachments/assets/4c797e0d-1d43-439b-89cb-2fe4efe69fe4" />
+
 <img width="1147" height="441" alt="image" src="https://github.com/user-attachments/assets/cd762758-39ad-41f9-8622-abde18bfe0ec" />
 
 
@@ -184,8 +185,6 @@ MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Users] = COUNTROWS('Menta
 - Stress increases as daily screen time increases (the positive slope suggests that as average screen time increases, average stress level rises)
 - Happiness decreases with higher screen time (the negative slope suggests that higher screen time is associated with lower happiness)
 - Both are correlation only, not a causal claim.
-- Regression shows a positive linear relationship between screen time and stress.
-- R² indicates the model explains a meaningful portion of variance. However, this dataset is synthetic so perfect linearity wouldn't normally be expected with 'real-world' data.
 - Sleep quality declines sharply after 6+ hours of screen time.
 - Gender differences appear in stress and happiness distributions.
 
