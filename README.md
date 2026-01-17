@@ -198,13 +198,13 @@ RETURN
 
 
 ## Key Takeaways
-Stress increases as daily screen time increases (the positive slope suggests that as average screen time increases, average stress level rises)
-Happiness decreases with higher screen time (the negative slope suggests that higher screen time is associated with lower happiness)
-Both are correlation only, not a causal claim.
-Regression shows a positive linear relationship between screen time and stress.
-R² indicates the model explains a meaningful portion of variance. However, this dataset is synthetic so perfect linearity wouldn't normally be expected with 'real-world' data.
-Sleep quality declines sharply after 6+ hours of screen time.
-Gender differences appear in stress and happiness distributions.
+- Stress increases as daily screen time increases (the positive slope suggests that as average screen time increases, average stress level rises)
+- Happiness decreases with higher screen time (the negative slope suggests that higher screen time is associated with lower happiness)
+- Both are correlation only, not a causal claim.
+- Regression shows a positive linear relationship between screen time and stress.
+- R² indicates the model explains a meaningful portion of variance. However, this dataset is synthetic so perfect linearity wouldn't normally be expected with 'real-world' data.
+- Sleep quality declines sharply after 6+ hours of screen time.
+- Gender differences appear in stress and happiness distributions.
 
 ## References
 1. Wolfers, L.N. and Utz, S., 2022. Social media use, stress, and coping. Current Opinion in Psychology, 45, p.101305.
