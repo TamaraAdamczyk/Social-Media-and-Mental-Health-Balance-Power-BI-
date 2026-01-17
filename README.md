@@ -59,127 +59,107 @@ M
 )
 
 ## DAX Measures Used
-Averages
-DAX
-Avg Stress =
-AVERAGE('Mental_Health_and_Social_Media_Balance_Dataset'[Stress_Level(1-10)])
-
-Avg Happiness =
-AVERAGE('Mental_Health_and_Social_Media_Balance_Dataset'[Happiness_Index(1-10)])
-
-Avg Sleep =
-AVERAGE('Mental_Health_and_Social_Media_Balance_Dataset'[Sleep_Quality(1-10)])
-
-Avg Screen Time =
-AVERAGE('Mental_Health_and_Social_Media_Balance_Dataset'[Daily_Screen_Time(hrs)])
-
-Conditional Formatting (Stress)
-DAX
-Stress Color =
-SWITCH(
-    TRUE(),
-    [Avg Stress] < 4, "#66CC66",
-    [Avg Stress] < 7, "#FFD700",
-    "#FF6666"
+This has been created and copied from DAX studio:
+---- MODEL MEASURES BEGIN ----
+MEASURE Mental_Health_and_Social_Media_Balance_Dataset[% High Happiness] = 
+VAR Total = [Users]
+VAR High = CALCULATE([Users], 'Mental_Health_and_Social_Media_Balance_Dataset'[Happiness Band] = "High (8–10)")
+RETURN DIVIDE(High, Total)
+MEASURE Mental_Health_and_Social_Media_Balance_Dataset[% High Stress] = 
+VAR Total = [Users]
+VAR High = CALCULATE([Users], 'Mental_Health_and_Social_Media_Balance_Dataset'[Stress Band] = "High")
+RETURN DIVIDE(High, Total)
+MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Avg Days Offline] = AVERAGE('Mental_Health_and_Social_Media_Balance_Dataset'[Days_Without_Social_Media])
+MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Avg Exercise / Week] = AVERAGE('Mental_Health_and_Social_Media_Balance_Dataset'[Exercise_Frequency(week)])
+MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Avg Happiness] = AVERAGE('Mental_Health_and_Social_Media_Balance_Dataset'[Happiness_Index(1-10)])
+MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Avg Screen Time] = AVERAGE('Mental_Health_and_Social_Media_Balance_Dataset'[Daily_Screen_Time(hrs)])
+MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Avg Sleep Quality] = AVERAGE('Mental_Health_and_Social_Media_Balance_Dataset'[Sleep_Quality(1-10)])
+MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Avg Stress] = AVERAGE('Mental_Health_and_Social_Media_Balance_Dataset'[Stress_Level(1-10)])
+MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Corr Offline–Happiness] = 
+VAR T = ADDCOLUMNS('Mental_Health_and_Social_Media_Balance_Dataset', "X", 'Mental_Health_and_Social_Media_Balance_Dataset'[Days_Without_Social_Media], "Y", 'Mental_Health_and_Social_Media_Balance_Dataset'[Happiness_Index(1-10)])
+VAR AvgX = AVERAGEX(T, [X])
+VAR AvgY = AVERAGEX(T, [Y])
+VAR Num = SUMX(T, ([X] - AvgX) * ([Y] - AvgY))
+VAR Den = SQRT( SUMX(T, ([X] - AvgX)^2) * SUMX(T, ([Y] - AvgY)^2) )
+RETURN DIVIDE(Num, Den)
+MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Corr ScreenTime–Happiness] = 
+VAR T = 
+  ADDCOLUMNS(
+    'Mental_Health_and_Social_Media_Balance_Dataset',
+    "X", 'Mental_Health_and_Social_Media_Balance_Dataset'[Daily_Screen_Time(hrs)],
+    "Y", 'Mental_Health_and_Social_Media_Balance_Dataset'[Happiness_Index(1-10)]
+  )
+VAR AvgX = AVERAGEX(T, [X])
+VAR AvgY = AVERAGEX(T, [Y])
+VAR Num = SUMX(T, ([X] - AvgX) * ([Y] - AvgY))
+VAR Den = SQRT( SUMX(T, ([X] - AvgX)^2) * SUMX(T, ([Y] - AvgY)^2) )
+RETURN DIVIDE(Num, Den)
+MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Corr Sleep–Happiness] = 
+VAR T = ADDCOLUMNS('Mental_Health_and_Social_Media_Balance_Dataset', "X", 'Mental_Health_and_Social_Media_Balance_Dataset'[Sleep_Quality(1-10)], "Y", 'Mental_Health_and_Social_Media_Balance_Dataset'[Happiness_Index(1-10)])
+VAR AvgX = AVERAGEX(T, [X])
+VAR AvgY = AVERAGEX(T, [Y])
+VAR Num = SUMX(T, ([X] - AvgX) * ([Y] - AvgY))
+VAR Den = SQRT( SUMX(T, ([X] - AvgX)^2) * SUMX(T, ([Y] - AvgY)^2) )
+RETURN DIVIDE(Num, Den)
+MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Happiness Lower Bound] = [Avg Happiness] - [Happiness StdDev by Band]
+MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Happiness StdDev by Band] = 
+VAR SelectedBand = SELECTEDVALUE('Mental_Health_and_Social_Media_Balance_Dataset'[Screen Time Band (hrs/day)])
+RETURN
+CALCULATE(
+    STDEV.P('Mental_Health_and_Social_Media_Balance_Dataset'[Happiness_Index(1-10)]),
+    'Mental_Health_and_Social_Media_Balance_Dataset'[Screen Time Band (hrs/day)] = SelectedBand
 )
-
-Standard Deviation by Screen Time Band
-DAX
-Happiness StdDev by Band =
-VAR SelectedBand =
-    SELECTEDVALUE(
-        'Mental_Health_and_Social_Media_Balance_Dataset'[Screen Time Band (hrs/day)]
-    )
+MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Happiness Upper Bound] = [Avg Happiness] + [Happiness StdDev by Band]
+MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Intercept Stress] = 
+VAR XMean = AVERAGE('Mental_Health_and_Social_Media_Balance_Dataset'[Daily_Screen_Time(hrs)])
+VAR YMean = AVERAGE('Mental_Health_and_Social_Media_Balance_Dataset'[Stress_Level(1-10)])
 RETURN
-    CALCULATE(
-        STDEV.P(
-            'Mental_Health_and_Social_Media_Balance_Dataset'[Happiness_Index(1-10)]
-        ),
-        'Mental_Health_and_Social_Media_Balance_Dataset'[Screen Time Band (hrs/day)]
-            = SelectedBand
-    )
-
-Error Bar Bounds
-DAX
-Happiness Upper Bound =
-[Avg Happiness] + [Happiness StdDev by Band]
-
-Happiness Lower Bound =
-[Avg Happiness] - [Happiness StdDev by Band]
-Linear Regression (Slope, Intercept, Prediction)
-
-Slope
-DAX
-Slope =
-VAR XMean =
-    AVERAGE('Mental_Health_and_Social_Media_Balance_Dataset'[Daily_Screen_Time(hrs)])
-VAR YMean =
-    AVERAGE('Mental_Health_and_Social_Media_Balance_Dataset'[Stress_Level(1-10)])
-VAR Numerator =
-    SUMX(
-        'Mental_Health_and_Social_Media_Balance_Dataset',
-        (
-            'Mental_Health_and_Social_Media_Balance_Dataset'[Daily_Screen_Time(hrs)]
-                - XMean
-        )
-            * (
-                'Mental_Health_and_Social_Media_Balance_Dataset'[Stress_Level(1-10)]
-                    - YMean
-            )
-    )
-VAR Denominator =
-    SUMX(
-        'Mental_Health_and_Social_Media_Balance_Dataset',
-        POWER(
-            'Mental_Health_and_Social_Media_Balance_Dataset'[Daily_Screen_Time(hrs)]
-                - XMean,
-            2
-        )
-    )
-RETURN
-    DIVIDE(Numerator, Denominator)
-
-Intercept
-DAX
-Intercept =
-VAR XMean =
-    AVERAGE('Mental_Health_and_Social_Media_Balance_Dataset'[Daily_Screen_Time(hrs)])
-VAR YMean =
-    AVERAGE('Mental_Health_and_Social_Media_Balance_Dataset'[Stress_Level(1-10)])
-RETURN
-    YMean - [Slope] * XMean
-
-Predicted Stress
-DAX
-Predicted Stress =
-[Slope] *
-    'Mental_Health_and_Social_Media_Balance_Dataset'[Daily_Screen_Time(hrs)]
-    + [Intercept]
-R² Calculation
-DAX
-R2 =
+YMean - [Slope Stress] * XMean
+MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Predicted Stress] = 
+[Slope Stress] * 'Mental_Health_and_Social_Media_Balance_Dataset'[Avg Screen Time] + [Intercept Stress]
+MEASURE Mental_Health_and_Social_Media_Balance_Dataset[R2] = 
 VAR SS_Total =
     SUMX(
         'Mental_Health_and_Social_Media_Balance_Dataset',
-        POWER(
-            'Mental_Health_and_Social_Media_Balance_Dataset'[Stress_Level(1-10)]
-                - AVERAGE(
-                    'Mental_Health_and_Social_Media_Balance_Dataset'[Stress_Level(1-10)]
-                ),
-            2
-        )
+        POWER('Mental_Health_and_Social_Media_Balance_Dataset'[Stress_Level(1-10)] - AVERAGE('Mental_Health_and_Social_Media_Balance_Dataset'[Stress_Level(1-10)]), 2)
     )
 VAR SS_Residual =
     SUMX(
         'Mental_Health_and_Social_Media_Balance_Dataset',
-        POWER(
-            'Mental_Health_and_Social_Media_Balance_Dataset'[Stress_Level(1-10)]
-                - [Predicted Stress],
-            2
-        )
+        POWER('Mental_Health_and_Social_Media_Balance_Dataset'[Stress_Level(1-10)] - [Predicted Stress], 2)
     )
 RETURN
-    1 - DIVIDE(SS_Residual, SS_Total)
+1 - DIVIDE(SS_Residual, SS_Total)
+MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Slope Stress] = 
+VAR XMean = AVERAGE('Mental_Health_and_Social_Media_Balance_Dataset'[Daily_Screen_Time(hrs)])
+VAR YMean = AVERAGE('Mental_Health_and_Social_Media_Balance_Dataset'[Stress_Level(1-10)])
+VAR Numerator =
+    SUMX(
+        'Mental_Health_and_Social_Media_Balance_Dataset',
+        ('Mental_Health_and_Social_Media_Balance_Dataset'[Daily_Screen_Time(hrs)] - XMean) *
+        ('Mental_Health_and_Social_Media_Balance_Dataset'[Stress_Level(1-10)] - YMean)
+    )
+VAR Denominator =
+    SUMX(
+        'Mental_Health_and_Social_Media_Balance_Dataset',
+        POWER('Mental_Health_and_Social_Media_Balance_Dataset'[Daily_Screen_Time(hrs)] - XMean, 2)
+    )
+RETURN
+DIVIDE(Numerator, Denominator)
+MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Stress Color] = 
+SWITCH (
+    TRUE(),
+    [Avg Stress] < 4, "Green",     // less than 4
+    [Avg Stress] < 7, "Yellow",    // 4–6.9
+    "Red"                          // 7 and above
+)
+MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Stress Lower Bound] = [Avg Stress] - [Stress StdDev]
+MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Stress StdDev] = 
+STDEV.P('Mental_Health_and_Social_Media_Balance_Dataset'[Stress_Level(1-10)])
+MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Stress Upper Bound] = [Avg Stress] + [Stress StdDev]
+MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Users] = COUNTROWS('Mental_Health_and_Social_Media_Balance_Dataset')
+---- MODEL MEASURES END ----
+
 
 ## Visuals Created
 - Scatter plots (Screen Time vs Stress, Screen Time vs Happiness)
