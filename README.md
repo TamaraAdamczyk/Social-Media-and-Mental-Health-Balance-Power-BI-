@@ -60,7 +60,9 @@ M
 
 ## DAX Measures Used
 This has been created and copied from DAX studio:
+
 ---- MODEL MEASURES BEGIN ----
+
 MEASURE Mental_Health_and_Social_Media_Balance_Dataset[% High Happiness] = 
 VAR Total = [Users]
 VAR High = CALCULATE([Users], 'Mental_Health_and_Social_Media_Balance_Dataset'[Happiness Band] = "High (8–10)")
@@ -158,6 +160,7 @@ MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Stress StdDev] =
 STDEV.P('Mental_Health_and_Social_Media_Balance_Dataset'[Stress_Level(1-10)])
 MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Stress Upper Bound] = [Avg Stress] + [Stress StdDev]
 MEASURE Mental_Health_and_Social_Media_Balance_Dataset[Users] = COUNTROWS('Mental_Health_and_Social_Media_Balance_Dataset')
+
 ---- MODEL MEASURES END ----
 
 
